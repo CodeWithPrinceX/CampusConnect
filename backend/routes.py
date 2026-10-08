@@ -73,3 +73,16 @@ def get_issue(issue_id: int):
             "status": "Open"
         }
     }
+
+
+class StatusUpdateRequest(BaseModel):
+    status: str
+
+
+@router.put("/issues/{issue_id}/status")
+def update_issue_status(issue_id: int, data: StatusUpdateRequest):
+    return {
+        "message": "Issue status updated successfully!",
+        "issue_id": issue_id,
+        "status": data.status
+    }
