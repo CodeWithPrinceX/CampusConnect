@@ -58,3 +58,18 @@ def get_issues():
         "message": "Issues retrieved successfully!",
         "issues": []
     }
+
+
+@router.get("/issues/{issue_id}")
+def get_issue(issue_id: int):
+    return {
+        "message": "Issue retrieved successfully!",
+        "issue": {
+            "id": issue_id,
+            "title": "Sample Issue",
+            "category": "Electrical",
+            "location": "Block A",
+            "description": "Sample issue description",
+            "status": "Open"
+        }
+    }
