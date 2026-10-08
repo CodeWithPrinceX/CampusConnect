@@ -50,3 +50,11 @@ def create_issue(issue: IssueRequest):
         "message": "Issue data received!",
         "issue": issue
     }
+
+
+@router.get("/issues")
+def get_issues():
+    return {
+        "message": "Issues retrieved successfully!",
+        "issues": []
+    }
