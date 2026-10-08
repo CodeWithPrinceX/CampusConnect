@@ -22,3 +22,16 @@ def register(user: RegisterRequest):
         "message": "Registration data received!",
         "user": user
     }
+
+
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+
+
+@router.post("/login")
+def login(user: LoginRequest):
+    return {
+        "message": "Login data received!",
+        "email": user.email
+    }
