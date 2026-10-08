@@ -35,3 +35,18 @@ def login(user: LoginRequest):
         "message": "Login data received!",
         "email": user.email
     }
+
+
+class IssueRequest(BaseModel):
+    title: str
+    category: str
+    location: str
+    description: str
+
+
+@router.post("/issues")
+def create_issue(issue: IssueRequest):
+    return {
+        "message": "Issue data received!",
+        "issue": issue
+    }
