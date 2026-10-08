@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from pydantic import BaseModel
 
 router = APIRouter()
 
@@ -6,3 +7,18 @@ router = APIRouter()
 @router.get("/test")
 def test():
     return {"message": "Routes are working!"}
+
+
+class RegisterRequest(BaseModel):
+    full_name: str
+    email: str
+    department: str
+    password: str
+
+
+@router.post("/register")
+def register(user: RegisterRequest):
+    return {
+        "message": "Registration data received!",
+        "user": user
+    }
