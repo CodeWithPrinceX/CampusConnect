@@ -1,25 +1,33 @@
 """
 CampusConnect - Database Setup
+
 This file creates the SQLite database and tables (users + issues).
-Your FastAPI backend teammate can import from this file.
+The FastAPI backend can import get_connection() from this file.
 """
 
 import sqlite3
+from pathlib import Path
+
+
+# Always use the database file inside the backend folder
+BASE_DIR = Path(__file__).resolve().parent
+DB_PATH = BASE_DIR / "campusconnect.db"
+
 
 def get_connection():
     """
-    Opens a connection to the SQLite database file.
-    If the file doesn't exist yet, SQLite will create it automatically.
+    Opens a connection to the SQLite database.
     """
-    connection = sqlite3.connect("campusconnect.db")
+    connection = sqlite3.connect(DB_PATH)
     connection.execute("PRAGMA foreign_keys = ON;")
     return connection
 
+
 def create_tables():
     """
-    Creates the 'users' and 'issues' tables if they don't already exist.
-    This is safe to call multiple times — it won't erase existing data.
+    Creates the users and issues tables if they don't already exist.
     """
+
     connection = get_connection()
     cursor = connection.cursor()
 
@@ -47,8 +55,10 @@ def create_tables():
 
     connection.commit()
     connection.close()
+
     print("[OK] users table created successfully!")
     print("[OK] issues table created successfully!")
+
 
 if __name__ == "__main__":
     create_tables()
