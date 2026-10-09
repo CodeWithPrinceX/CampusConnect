@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>CampusConnect | Dashboard</title>
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+</head>
+
+
+<body>
+
+    <!-- NAVBAR -->
+
+    <header class="navbar">
+
+        <a
+            href="dashboard.html"
+            class="nav-logo"
+        >
+            Campus<span>Connect</span>
+        </a>
+
+
+        <nav>
+
+            <a
+                href="dashboard.html"
+                class="active"
+            >
+                Dashboard
+            </a>
+
+            <a href="create-issue.html">
+                Create Issue
+            </a>
+
+            <a href="issue-details.html">
+                Issues
+            </a>
+
+            <a href="profile.html">
+                Profile
+            </a>
+
+            <a
+                href="index.html"
+                class="logout"
+                id="logoutButton"
+            >
+                Logout
+            </a>
+
+        </nav>
+
+    </header>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main-content">
+
+
+        <!-- WELCOME -->
+
+        <section class="welcome-section">
+
+            <div>
+
+                <p class="eyebrow">
+                    CAMPUSCONNECT
+                </p>
+
+                <h1 id="welcomeName">
+                    Welcome back!
+                </h1>
+
+                <p>
+                    Here's what's happening around your campus.
+                </p>
+
+            </div>
+
+
+            <a
+                href="create-issue.html"
+                class="white-btn"
+            >
+                + Report an Issue
+            </a>
+
+        </section>
+
+
+        <!-- STATISTICS -->
+
+        <section class="stats">
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    📋
+                </div>
+
+                <span>
+                    Total Issues
+                </span>
+
+                <strong id="totalIssues">
+                    0
+                </strong>
+
+                <small>
+                    All reported issues
+                </small>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    ⏳
+                </div>
+
+                <span>
+                    In Progress
+                </span>
+
+                <strong id="progressIssues">
+                    0
+                </strong>
+
+                <small>
+                    Currently being handled
+                </small>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    ✓
+                </div>
+
+                <span>
+                    Resolved
+                </span>
+
+                <strong id="resolvedIssues">
+                    0
+                </strong>
+
+                <small>
+                    Successfully resolved
+                </small>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    📈
+                </div>
+
+                <span>
+                    This Month
+                </span>
+
+                <strong id="thisMonth">
+                    0
+                </strong>
+
+                <small>
+                    Issues reported
+                </small>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- RECENT ISSUES -->
+
+        <section>
+
+
+            <div class="section-heading">
+
+                <div>
+
+                    <h2>
+                        Recent Issues
+                    </h2>
+
+                    <p>
+                        Latest issues reported by students.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div
+                class="issue-list"
+                id="issueList"
+            >
+
+                <!-- JavaScript will add issues here -->
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+    <!-- JAVASCRIPT -->
+
+    <script src="js/script.js"></script>
+
+</body>
+
+</html>

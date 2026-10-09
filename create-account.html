@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CampusConnect | Create Account</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="login-page">
+
+    <div class="auth-container">
+
+        <div class="auth-left">
+
+            <div class="big-logo">
+                Campus<span>Connect</span>
+            </div>
+
+            <p class="tagline">
+                Join your campus community.
+            </p>
+
+            <p class="description">
+                Create your account and start reporting,
+                tracking and resolving campus issues.
+            </p>
+
+            <div class="feature-list">
+                <div>✓ Create and track issues</div>
+                <div>✓ Stay updated on complaints</div>
+                <div>✓ Connect with campus services</div>
+            </div>
+
+        </div>
+
+        <div class="auth-card">
+
+            <div class="card-icon">✨</div>
+
+            <h2>Create Account</h2>
+
+            <p class="small-text">
+                Create your CampusConnect account
+            </p>
+
+            <form id="registerForm">
+
+                <label for="registerName">
+                    Full Name
+                </label>
+
+                <input
+                    type="text"
+                    id="registerName"
+                    placeholder="Enter your full name"
+                    required
+                >
+
+                <label for="registerEmail">
+                    Email Address
+                </label>
+
+                <input
+                    type="email"
+                    id="registerEmail"
+                    placeholder="Enter your email"
+                    required
+                >
+
+                <label for="registerDepartment">
+                    Department
+                </label>
+
+                <select id="registerDepartment" required>
+                    <option value="">Select Department</option>
+                    <option value="CSE">Computer Science & Engineering</option>
+                    <option value="AI/ML">CSE AI/ML</option>
+                    <option value="ECE">Electronics & Communication</option>
+                    <option value="ME">Mechanical Engineering</option>
+                    <option value="Civil">Civil Engineering</option>
+                    <option value="Other">Other</option>
+                </select>
+
+                <label for="registerPassword">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    id="registerPassword"
+                    placeholder="Create a password"
+                    required
+                >
+
+                <label for="confirmPassword">
+                    Confirm Password
+                </label>
+
+                <input
+                    type="password"
+                    id="confirmPassword"
+                    placeholder="Confirm your password"
+                    required
+                >
+
+                <button type="submit" class="gradient-btn">
+                    Create Account →
+                </button>
+
+            </form>
+
+            <p class="switch-text">
+                Already have an account?
+                <a href="index.html">
+                    Login
+                </a>
+            </p>
+
+        </div>
+
+    </div>
+
+    <script src="css/js/script.js"></script>
+
+</body>
+</html>
