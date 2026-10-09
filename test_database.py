@@ -7,6 +7,7 @@ import sqlite3
 
 conn = sqlite3.connect("campusconnect.db")
 conn.execute("PRAGMA foreign_keys = ON;")
+conn.row_factory = sqlite3.Row  
 c = conn.cursor()
 
 print("=== TEST 1: Does issues table exist? ===")
@@ -19,14 +20,14 @@ print("=== TEST 2: Are the columns correct? ===")
 c.execute("PRAGMA table_info(issues)")
 rows = c.fetchall()
 for r in rows:
-    print(f"  {r[1]:15} | Type: {r[2]:10} | Required: {bool(r[3])}  | Default: {r[4]}")
+    print(f"  {r['name']:15} | Type: {r['type']:10} | Required: {bool(r['notnull'])}  | Default: {r['dflt_value']}")
 print()
 
 print("=== TEST 3: Is user_id connected to users? ===")
 c.execute("PRAGMA foreign_key_list(issues)")
 fk = c.fetchall()
 if fk:
-    print(f"  Foreign Key: issues.{fk[0][3]} --> {fk[0][2]}.{fk[0][4]}")
+    print(f"  Foreign Key: issues.{fk[0]['from']} --> {fk[0]['table']}.{fk[0]['to']}")
 else:
     print("  No foreign key found!")
 print()
@@ -41,23 +42,25 @@ c.execute(
 user_id = c.lastrowid
 
 c.execute(
-    "INSERT INTO issues (user_id, category, title, description) VALUES (?, ?, ?, ?)",
-    (user_id, "Classroom", "Projector not working", "Room 301 projector is broken")
+    "INSERT INTO issues (user_id, category, title, description, location) VALUES (?, ?, ?, ?, ?)",
+    (user_id, "Classroom", "Projector not working", "Room 301 projector is broken", "Room 301")
 )
 conn.commit()
 
 c.execute("SELECT * FROM issues WHERE id = ?", (c.lastrowid,))
 issue = c.fetchone()
-print(f"  Issue ID    : {issue[0]}")
-print(f"  User ID     : {issue[1]}")
-print(f"  Category    : {issue[2]}")
-print(f"  Title       : {issue[3]}")
-print(f"  Description : {issue[4]}")
-print(f"  Status      : {issue[5]}")
-print(f"  Created At  : {issue[6]}")
+
+print(f"  Issue ID    : {issue['id']}")
+print(f"  User ID     : {issue['user_id']}")
+print(f"  Category    : {issue['category']}")
+print(f"  Title       : {issue['title']}")
+print(f"  Description : {issue['description']}")
+print(f"  Location    : {issue['location']}")
+print(f"  Status      : {issue['status']}")
+print(f"  Created At  : {issue['created_at']}")
 print()
 
-if issue[5] == "Open":
+if issue['status'] == "Open":
     print("[OK] Default status is 'Open' -- PASS!")
 else:
     print("[FAIL] Default status is NOT 'Open'!")

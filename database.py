@@ -39,16 +39,24 @@ def create_tables():
             category       TEXT     NOT NULL,
             title          TEXT     NOT NULL,
             description    TEXT     NOT NULL,
+            location       TEXT,                            <--- (NEW COLUMN ADDED HERE)
             status         TEXT     NOT NULL DEFAULT 'Open',
             created_at     DATETIME DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (user_id) REFERENCES users (id)
         );
     """)
+    
+    cursor.execute("PRAGMA table_info(issues);")
+    columns = [row[1] for row in cursor.fetchall()]
+
+    if "location" not in columns:
+        cursor.execute("ALTER TABLE issues ADD COLUMN location TEXT;")
+        print("[OK] Added missing 'location' column to issues table.")
 
     connection.commit()
     connection.close()
-    print("[OK] users table created successfully!")
-    print("[OK] issues table created successfully!")
+    print("[OK] users table ready!")
+    print("[OK] issues table ready!")
 
 if __name__ == "__main__":
     create_tables()
