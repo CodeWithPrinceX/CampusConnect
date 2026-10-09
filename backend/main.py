@@ -1,6 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routes import router
+import database
+
+# Initialize the database and tables automatically on startup
+database.create_tables()
 
 app = FastAPI()
 
