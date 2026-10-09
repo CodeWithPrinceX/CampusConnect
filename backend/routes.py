@@ -33,7 +33,7 @@ class LoginRequest(BaseModel):
 class IssueRequest(BaseModel):
     title: str
     category: str
-    location: str = ""
+    location: str
     description: str
 
 
@@ -107,6 +107,7 @@ def login(user: LoginRequest):
 
     try:
         cursor = connection.cursor()
+
         cursor.execute(
             """
             SELECT id, name, password_hash
@@ -115,6 +116,7 @@ def login(user: LoginRequest):
             """,
             (user.email,)
         )
+
         existing_user = cursor.fetchone()
 
     finally:
@@ -167,14 +169,15 @@ def create_issue(issue: IssueRequest, user_id: int):
         cursor.execute(
             """
             INSERT INTO issues
-                (user_id, category, title, description)
-            VALUES (?, ?, ?, ?)
+                (user_id, category, title, description, location)
+            VALUES (?, ?, ?, ?, ?)
             """,
             (
                 user_id,
                 issue.category,
                 issue.title,
-                issue.description
+                issue.description,
+                issue.location
             )
         )
 
@@ -202,6 +205,7 @@ def get_issues():
 
     try:
         cursor = connection.cursor()
+
         cursor.execute(
             """
             SELECT
@@ -210,6 +214,7 @@ def get_issues():
                 i.title,
                 i.category,
                 i.description,
+                i.location,
                 i.status,
                 i.created_at,
                 u.name
@@ -228,10 +233,10 @@ def get_issues():
                 "title": row[2],
                 "category": row[3],
                 "description": row[4],
-                "status": row[5],
-                "created_at": row[6],
-                "reporter": row[7],
-                "location": ""
+                "location": row[5],
+                "status": row[6],
+                "created_at": row[7],
+                "reporter": row[8]
             }
             for row in rows
         ]
@@ -255,6 +260,7 @@ def get_issue(issue_id: int):
 
     try:
         cursor = connection.cursor()
+
         cursor.execute(
             """
             SELECT
@@ -263,6 +269,7 @@ def get_issue(issue_id: int):
                 i.title,
                 i.category,
                 i.description,
+                i.location,
                 i.status,
                 i.created_at,
                 u.name
@@ -287,10 +294,10 @@ def get_issue(issue_id: int):
             "title": row[2],
             "category": row[3],
             "description": row[4],
-            "status": row[5],
-            "created_at": row[6],
-            "reporter": row[7],
-            "location": ""
+            "location": row[5],
+            "status": row[6],
+            "created_at": row[7],
+            "reporter": row[8]
         }
 
     finally:
