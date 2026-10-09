@@ -47,11 +47,19 @@ def create_tables():
             category       TEXT     NOT NULL,
             title          TEXT     NOT NULL,
             description    TEXT     NOT NULL,
+            location       TEXT,
             status         TEXT     NOT NULL DEFAULT 'Open',
             created_at     DATETIME DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (user_id) REFERENCES users (id)
         );
     """)
+
+    # Safe migration: add location column if it doesn't exist
+    cursor.execute("PRAGMA table_info(issues);")
+    columns = [row[1] for row in cursor.fetchall()]
+    if "location" not in columns:
+        cursor.execute("ALTER TABLE issues ADD COLUMN location TEXT;")
+        print("[OK] Added 'location' column to existing database.")
 
     connection.commit()
     connection.close()
