@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>CampusConnect | Issue Details</title>
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+    <header class="navbar">
+
+        <a
+            href="dashboard.html"
+            class="nav-logo"
+        >
+            Campus<span>Connect</span>
+        </a>
+
+
+        <nav>
+
+            <a href="dashboard.html">
+                Dashboard
+            </a>
+
+            <a href="create-issue.html">
+                Create Issue
+            </a>
+
+            <a
+                href="issue-details.html"
+                class="active"
+            >
+                Issues
+            </a>
+
+            <a href="profile-page.html">
+                Profile
+            </a>
+
+            <a
+                href="index.html"
+                class="logout"
+            >
+                Logout
+            </a>
+
+        </nav>
+
+    </header>
+
+
+    <main class="details-page">
+
+
+        <a
+            href="dashboard.html"
+            class="back-link"
+        >
+            ← Back to Dashboard
+        </a>
+
+
+        <div class="details-card">
+
+
+            <div class="details-top">
+
+                <div>
+
+                    <span
+                        class="category"
+                        id="detailCategory"
+                    >
+                        ISSUE
+                    </span>
+
+                    <h1 id="detailTitle">
+                        Issue Details
+                    </h1>
+
+                    <p
+                        class="issue-meta"
+                        id="detailMeta"
+                    >
+                        CampusConnect Issue
+                    </p>
+
+                </div>
+
+
+                <span
+                    class="status progress"
+                    id="detailStatus"
+                >
+                    Open
+                </span>
+
+            </div>
+
+
+            <div class="details-body">
+
+                <h3>
+                    Issue Description
+                </h3>
+
+                <p id="detailDescription">
+                    Select an issue from the dashboard to view
+                    its details.
+                </p>
+
+            </div>
+
+
+            <div class="details-info">
+
+
+                <div>
+
+                    <span>
+                        Location
+                    </span>
+
+                    <strong id="detailLocation">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Reported By
+                    </span>
+
+                    <strong id="detailReporter">
+                        Student
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Category
+                    </span>
+
+                    <strong id="detailCategoryInfo">
+                        -
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="status-actions">
+
+                <h3>
+                    Update Status
+                </h3>
+
+
+                <button
+                    class="status-btn"
+                    data-status="Open"
+                >
+                    Open
+                </button>
+
+
+                <button
+                    class="status-btn"
+                    data-status="In Progress"
+                >
+                    In Progress
+                </button>
+
+
+                <button
+                    class="status-btn"
+                    data-status="Resolved"
+                >
+                    Resolved
+                </button>
+
+            </div>
+
+
+        </div>
+
+
+    </main>
+
+
+    <script src="js/script.js"></script>
+
+</body>
+
+</html>

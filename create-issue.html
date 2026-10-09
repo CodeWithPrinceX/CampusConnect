@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>CampusConnect | Create Issue</title>
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+    <header class="navbar">
+
+        <a
+            href="dashboard.html"
+            class="nav-logo"
+        >
+            Campus<span>Connect</span>
+        </a>
+
+
+        <nav>
+
+            <a href="dashboard.html">
+                Dashboard
+            </a>
+
+            <a
+                href="create-issue.html"
+                class="active"
+            >
+                Create Issue
+            </a>
+
+            <a href="issue-details.html">
+                Issues
+            </a>
+
+            <a href="profile-page.html">
+                Profile
+            </a>
+
+            <a
+                href="index.html"
+                class="logout"
+            >
+                Logout
+            </a>
+
+        </nav>
+
+    </header>
+
+
+    <main class="form-page">
+
+
+        <a
+            href="dashboard.html"
+            class="back-link"
+        >
+            ← Back to Dashboard
+        </a>
+
+
+        <div class="form-header">
+
+            <span class="category">
+                NEW REPORT
+            </span>
+
+            <h1>
+                Report a Campus Issue
+            </h1>
+
+            <p>
+                Help improve the campus by reporting problems
+                you notice.
+            </p>
+
+        </div>
+
+
+        <form
+            class="issue-form"
+            id="issueForm"
+        >
+
+
+            <div class="form-group">
+
+                <label for="title">
+                    Issue Title
+                </label>
+
+                <input
+                    type="text"
+                    id="title"
+                    placeholder="e.g. Wi-Fi not working in library"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-row">
+
+
+                <div class="form-group">
+
+                    <label for="category">
+                        Category
+                    </label>
+
+                    <select
+                        id="category"
+                        required
+                    >
+
+                        <option value="">
+                            Select category
+                        </option>
+
+                        <option>
+                            Electricity
+                        </option>
+
+                        <option>
+                            Internet
+                        </option>
+
+                        <option>
+                            Cleanliness
+                        </option>
+
+                        <option>
+                            Water
+                        </option>
+
+                        <option>
+                            Infrastructure
+                        </option>
+
+                        <option>
+                            Security
+                        </option>
+
+                        <option>
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="location">
+                        Location
+                    </label>
+
+                    <input
+                        type="text"
+                        id="location"
+                        placeholder="e.g. Block A"
+                        required
+                    >
+
+                </div>
+
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="description">
+                    Description
+                </label>
+
+                <textarea
+                    id="description"
+                    rows="6"
+                    placeholder="Describe the issue in detail..."
+                    required
+                ></textarea>
+
+            </div>
+
+
+            <div class="form-actions">
+
+                <a
+                    href="dashboard.html"
+                    class="secondary-btn"
+                >
+                    Cancel
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="gradient-btn"
+                >
+                    Submit Issue →
+                </button>
+
+            </div>
+
+
+        </form>
+
+    </main>
+
+
+    <script src="js/script.js"></script>
+
+</body>
+
+</html>
