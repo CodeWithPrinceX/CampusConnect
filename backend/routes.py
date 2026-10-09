@@ -1,16 +1,44 @@
-from fastapi import APIRouter
+
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from passlib.context import CryptContext
-from pathlib import Path
-import sys
-
-sys.path.append(str(Path(__file__).resolve().parent.parent))
-
 from database import get_connection
 
 router = APIRouter()
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(
+    schemes=["bcrypt"],
+    deprecated="auto"
+)
+
+VALID_STATUSES = {"Open", "In Progress", "Resolved"}
+
+
+# -------------------------
+# Request Models
+# -------------------------
+
+class RegisterRequest(BaseModel):
+    full_name: str
+    email: str
+    department: str
+    password: str
+
+
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+
+
+class IssueRequest(BaseModel):
+    title: str
+    category: str
+    location: str = ""
+    description: str
+
+
+class StatusUpdateRequest(BaseModel):
+    status: str
 
 
 # -------------------------
@@ -26,21 +54,14 @@ def test():
 # Register
 # -------------------------
 
-class RegisterRequest(BaseModel):
-    full_name: str
-    email: str
-    department: str
-    password: str
-
-
-@router.post("/register")
+@router.post("/register", status_code=201)
 def register(user: RegisterRequest):
-    password_hash = pwd_context.hash(user.password)
-
     connection = get_connection()
-    cursor = connection.cursor()
 
     try:
+        cursor = connection.cursor()
+        password_hash = pwd_context.hash(user.password)
+
         cursor.execute(
             """
             INSERT INTO users (name, email, password_hash)
@@ -53,14 +74,24 @@ def register(user: RegisterRequest):
 
         return {
             "message": "Registration successful!",
-            "user_id": cursor.lastrowid
+            "user_id": cursor.lastrowid,
+            "name": user.full_name,
+            "email": user.email
         }
 
-    except Exception as e:
-        return {
-            "message": "Registration failed!",
-            "error": str(e)
-        }
+    except Exception as error:
+        connection.rollback()
+
+        if "UNIQUE constraint failed" in str(error):
+            raise HTTPException(
+                status_code=409,
+                detail="This email is already registered."
+            )
+
+        raise HTTPException(
+            status_code=500,
+            detail="Registration failed."
+        )
 
     finally:
         connection.close()
@@ -70,31 +101,38 @@ def register(user: RegisterRequest):
 # Login
 # -------------------------
 
-class LoginRequest(BaseModel):
-    email: str
-    password: str
-
-
 @router.post("/login")
 def login(user: LoginRequest):
     connection = get_connection()
-    cursor = connection.cursor()
 
-    cursor.execute(
-        "SELECT id, name, password_hash FROM users WHERE email = ?",
-        (user.email,)
-    )
+    try:
+        cursor = connection.cursor()
+        cursor.execute(
+            """
+            SELECT id, name, password_hash
+            FROM users
+            WHERE email = ?
+            """,
+            (user.email,)
+        )
+        existing_user = cursor.fetchone()
 
-    existing_user = cursor.fetchone()
-    connection.close()
+    finally:
+        connection.close()
 
     if existing_user is None:
-        return {"message": "Invalid email or password"}
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid email or password."
+        )
 
     user_id, name, password_hash = existing_user
 
     if not pwd_context.verify(user.password, password_hash):
-        return {"message": "Invalid email or password"}
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid email or password."
+        )
 
     return {
         "message": "Login successful!",
@@ -108,19 +146,50 @@ def login(user: LoginRequest):
 # Create Issue
 # -------------------------
 
-class IssueRequest(BaseModel):
-    title: str
-    category: str
-    location: str
-    description: str
+@router.post("/issues", status_code=201)
+def create_issue(issue: IssueRequest, user_id: int):
+    connection = get_connection()
 
+    try:
+        cursor = connection.cursor()
 
-@router.post("/issues")
-def create_issue(issue: IssueRequest):
-    return {
-        "message": "Issue data received!",
-        "issue": issue
-    }
+        cursor.execute(
+            "SELECT id FROM users WHERE id = ?",
+            (user_id,)
+        )
+
+        if cursor.fetchone() is None:
+            raise HTTPException(
+                status_code=404,
+                detail="User not found."
+            )
+
+        cursor.execute(
+            """
+            INSERT INTO issues
+                (user_id, category, title, description)
+            VALUES (?, ?, ?, ?)
+            """,
+            (
+                user_id,
+                issue.category,
+                issue.title,
+                issue.description
+            )
+        )
+
+        connection.commit()
+        issue_id = cursor.lastrowid
+
+        return {
+            "message": "Issue created successfully!",
+            "issue_id": issue_id,
+            "location": issue.location,
+            "status": "Open"
+        }
+
+    finally:
+        connection.close()
 
 
 # -------------------------
@@ -129,10 +198,51 @@ def create_issue(issue: IssueRequest):
 
 @router.get("/issues")
 def get_issues():
-    return {
-        "message": "Issues retrieved successfully!",
-        "issues": []
-    }
+    connection = get_connection()
+
+    try:
+        cursor = connection.cursor()
+        cursor.execute(
+            """
+            SELECT
+                i.id,
+                i.user_id,
+                i.title,
+                i.category,
+                i.description,
+                i.status,
+                i.created_at,
+                u.name
+            FROM issues AS i
+            JOIN users AS u ON i.user_id = u.id
+            ORDER BY i.id DESC
+            """
+        )
+
+        rows = cursor.fetchall()
+
+        issues = [
+            {
+                "id": row[0],
+                "user_id": row[1],
+                "title": row[2],
+                "category": row[3],
+                "description": row[4],
+                "status": row[5],
+                "created_at": row[6],
+                "reporter": row[7],
+                "location": ""
+            }
+            for row in rows
+        ]
+
+        return {
+            "message": "Issues retrieved successfully!",
+            "issues": issues
+        }
+
+    finally:
+        connection.close()
 
 
 # -------------------------
@@ -141,31 +251,140 @@ def get_issues():
 
 @router.get("/issues/{issue_id}")
 def get_issue(issue_id: int):
-    return {
-        "message": "Issue retrieved successfully!",
-        "issue": {
-            "id": issue_id,
-            "title": "Sample Issue",
-            "category": "Electrical",
-            "location": "Block A",
-            "description": "Sample issue description",
-            "status": "Open"
+    connection = get_connection()
+
+    try:
+        cursor = connection.cursor()
+        cursor.execute(
+            """
+            SELECT
+                i.id,
+                i.user_id,
+                i.title,
+                i.category,
+                i.description,
+                i.status,
+                i.created_at,
+                u.name
+            FROM issues AS i
+            JOIN users AS u ON i.user_id = u.id
+            WHERE i.id = ?
+            """,
+            (issue_id,)
+        )
+
+        row = cursor.fetchone()
+
+        if row is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Issue not found."
+            )
+
+        return {
+            "id": row[0],
+            "user_id": row[1],
+            "title": row[2],
+            "category": row[3],
+            "description": row[4],
+            "status": row[5],
+            "created_at": row[6],
+            "reporter": row[7],
+            "location": ""
         }
-    }
+
+    finally:
+        connection.close()
 
 
 # -------------------------
 # Update Issue Status
 # -------------------------
 
-class StatusUpdateRequest(BaseModel):
-    status: str
-
-
 @router.put("/issues/{issue_id}/status")
-def update_issue_status(issue_id: int, data: StatusUpdateRequest):
-    return {
-        "message": "Issue status updated successfully!",
-        "issue_id": issue_id,
-        "status": data.status
-    }
+def update_issue_status(
+    issue_id: int,
+    data: StatusUpdateRequest
+):
+    if data.status not in VALID_STATUSES:
+        raise HTTPException(
+            status_code=400,
+            detail="Status must be Open, In Progress, or Resolved."
+        )
+
+    connection = get_connection()
+
+    try:
+        cursor = connection.cursor()
+
+        cursor.execute(
+            """
+            UPDATE issues
+            SET status = ?
+            WHERE id = ?
+            """,
+            (data.status, issue_id)
+        )
+
+        if cursor.rowcount == 0:
+            raise HTTPException(
+                status_code=404,
+                detail="Issue not found."
+            )
+
+        connection.commit()
+
+        return {
+            "message": "Issue status updated successfully!",
+            "issue_id": issue_id,
+            "status": data.status
+        }
+
+    finally:
+        connection.close()
+
+
+# -------------------------
+# Get User Profile
+# -------------------------
+
+@router.get("/profile/{user_id}")
+def get_profile(user_id: int):
+    connection = get_connection()
+
+    try:
+        cursor = connection.cursor()
+
+        cursor.execute(
+            """
+            SELECT id, name, email
+            FROM users
+            WHERE id = ?
+            """,
+            (user_id,)
+        )
+
+        user = cursor.fetchone()
+
+        if user is None:
+            raise HTTPException(
+                status_code=404,
+                detail="User not found."
+            )
+
+        cursor.execute(
+            "SELECT COUNT(*) FROM issues WHERE user_id = ?",
+            (user_id,)
+        )
+
+        issue_count = cursor.fetchone()[0]
+
+        return {
+            "id": user[0],
+            "name": user[1],
+            "email": user[2],
+            "total_issues": issue_count
+        }
+
+    finally:
+        connection.close()
