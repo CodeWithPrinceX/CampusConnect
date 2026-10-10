@@ -36,9 +36,17 @@ def create_tables():
             id             INTEGER PRIMARY KEY AUTOINCREMENT,
             name           TEXT    NOT NULL,
             email          TEXT    NOT NULL UNIQUE,
-            password_hash  TEXT    NOT NULL
+            password_hash  TEXT    NOT NULL,
+            department     TEXT    DEFAULT ''
         );
     """)
+
+    # Safe migration: add department column if table already existed without it
+    cursor.execute("PRAGMA table_info(users);")
+    user_columns = [row[1] for row in cursor.fetchall()]
+    if "department" not in user_columns:
+        cursor.execute("ALTER TABLE users ADD COLUMN department TEXT DEFAULT '';")
+        print("[OK] Added 'department' column to existing users table.")
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS issues (

@@ -57,6 +57,7 @@
             <a
                 href="index.html"
                 class="logout"
+                id="logoutButton"
             >
                 Logout
             </a>
@@ -66,103 +67,76 @@
     </header>
 
 
-    <main class="profile">
+    <main class="profile-page">
 
+        <a
+            href="dashboard.html"
+            class="back-link"
+        >
+            ← Back to Dashboard
+        </a>
 
         <div class="profile-card">
 
+            <div class="profile-header">
+                <div
+                    class="profile-avatar"
+                    id="profileAvatar"
+                >
+                    U
+                </div>
 
-            <div
-                class="profile-avatar"
-                id="profileAvatar"
-            >
-                U
+                <div class="profile-title-area">
+                    <h1 id="profileName">
+                        Student
+                    </h1>
+                    <p class="profile-subtitle">
+                        CampusConnect Student Account
+                    </p>
+                </div>
             </div>
 
+            <div class="profile-content">
+                <h3 class="profile-section-title">
+                    Account Details
+                </h3>
 
-            <h1 id="profileName">
-                Student
-            </h1>
+                <div class="profile-grid">
+                    <div class="profile-field">
+                        <span>Full Name</span>
+                        <strong id="profileFullName">Student</strong>
+                    </div>
 
+                    <div class="profile-field">
+                        <span>Email Address</span>
+                        <strong id="profileEmail">-</strong>
+                    </div>
 
-            <p>
-                CampusConnect Student
-            </p>
+                    <div class="profile-field">
+                        <span>Department</span>
+                        <strong id="profileDepartment">-</strong>
+                    </div>
 
+                    <div class="profile-field">
+                        <span>Role</span>
+                        <strong id="profileRole">Student</strong>
+                    </div>
 
-            <div class="profile-info">
-
-
-                <div>
-
-                    <span>
-                        Full Name
-                    </span>
-
-                    <strong id="profileFullName">
-                        Student
-                    </strong>
-
+                    <div class="profile-field full-width">
+                        <span>Total Issues Reported</span>
+                        <strong id="profileIssues">0</strong>
+                    </div>
                 </div>
 
-
-                <div>
-
-                    <span>
-                        Email
-                    </span>
-
-                    <strong id="profileEmail">
-                        -
-                    </strong>
-
-                </div>
-
-
-                <div>
-
-                    <span>
-                        Department
-                    </span>
-
-                    <strong id="profileDepartment">
-                        -
-                    </strong>
-
-                </div>
-
-
-                <div>
-
-                    <span>
-                        Role
-                    </span>
-
-                    <strong>
-                        Student
-                    </strong>
-
-                </div>
-
-
+                <div id="profileError" class="profile-error" style="display: none;"></div>
             </div>
-
-
-            <a
-                href="dashboard.html"
-                class="gradient-btn profile-btn"
-            >
-                ← Back to Dashboard
-            </a>
-
 
         </div>
-
 
     </main>
 
 
-    <script src="js/script.js"></script>
+    <script src="css/js/script.js"></script>
 
 </body>
 

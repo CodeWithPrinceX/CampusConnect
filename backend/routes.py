@@ -64,10 +64,10 @@ def register(user: RegisterRequest):
 
         cursor.execute(
             """
-            INSERT INTO users (name, email, password_hash)
-            VALUES (?, ?, ?)
+            INSERT INTO users (name, email, password_hash, department)
+            VALUES (?, ?, ?, ?)
             """,
-            (user.full_name, user.email, password_hash)
+            (user.full_name, user.email, password_hash, user.department)
         )
 
         connection.commit()
@@ -364,7 +364,7 @@ def get_profile(user_id: int):
 
         cursor.execute(
             """
-            SELECT id, name, email
+            SELECT id, name, email, department
             FROM users
             WHERE id = ?
             """,
@@ -390,6 +390,7 @@ def get_profile(user_id: int):
             "id": user[0],
             "name": user[1],
             "email": user[2],
+            "department": user[3] if len(user) > 3 and user[3] else "General",
             "total_issues": issue_count
         }
 
